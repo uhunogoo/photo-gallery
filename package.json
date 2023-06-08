@@ -1,5 +1,5 @@
 {
-  "name": "photo-polaroid",
+  "name": "project-creative",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^9.65.4",
-    "@react-three/fiber": "^8.12.1",
-    "@react-three/postprocessing": "^2.7.1",
-    "eslint": "8.38.0",
-    "eslint-config-next": "13.3.0",
-    "gsap": "^3.11.5",
+    "@react-three/drei": "^9.74.6",
+    "@react-three/fiber": "^8.13.0",
+    "@react-three/postprocessing": "^2.14.9",
+    "@types/three": "^0.152.1",
+    "autoprefixer": "10.4.14",
+    "eslint": "8.42.0",
+    "eslint-config-next": "13.4.4",
+    "framer-motion": "^10.12.16",
+    "framer-motion-3d": "^10.12.16",
     "leva": "^0.9.34",
-    "next": "13.3.0",
-    "r3f-perf": "^7.1.2",
+    "next": "13.4.4",
+    "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "three": "^0.151.3"
+    "tailwindcss": "3.3.2",
+    "three": "^0.153.0"
   }
 }

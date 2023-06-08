@@ -43,7 +43,6 @@ function Experiance() {
         <SceneLayer renderPriority={1}>
           <PerspectiveCamera makeDefault { ...cameraSettings } />
           <fog attach={'fog'} color={ bgAndFog } near={-10} far={50} />
-          {/* <fogExp2 attach="fog" color={ bgAndFog } density={ fogDensity } /> */}
           <pointLight args={[ pointLight, 10, 0, 1 ]} position={[0, 0, -0.2]}  />
           <BackgroundEnvironment />
 
@@ -52,7 +51,6 @@ function Experiance() {
           <OrbitControls makeDefault />
         </SceneLayer>
         <SceneLayer renderPriority={2}>
-          {/* <OrbitControls makeDefault /> */}
           <GalleryEnvironment />
 
           <Gallery />
