@@ -1,7 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Navigation from './nav'
-import Block from './test'
 import { Suspense } from 'react'
 import Scene from './webgl/Scene'
 

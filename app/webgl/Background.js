@@ -1,12 +1,10 @@
 import React from 'react'
 import { Vector3 } from 'three';
 
-import { motion as motion3d } from 'framer-motion-3d';
-import { wrap, useMotionValue, useMotionValueEvent, useTime, useTransform } from 'framer-motion';
+import { wrap } from 'framer-motion';
+import { useFrame } from '@react-three/fiber';
 
-import PhotoShot from './PhotoShot';
-
-function Background({ count = 4, height = 10, radius = 4 }) {
+function Background({ count = 4, height = 10, radius = 4, children}) {
   const shots = React.useMemo(() => {
     const result = [];
     // const branches = 18;
@@ -21,13 +19,14 @@ function Background({ count = 4, height = 10, radius = 4 }) {
         radius, theta, h
       )
       const randomDirection = (Math.random() - 0.5) > 0 ? 1 : -1;
-        console.log( randomDirection )
       // Push line parameters
       result.push({
+        height,
+        radius,
         rotation: [ 0, theta - Math.PI , 0  ],
         position: vec.toArray(),
         direction: randomDirection,
-        scale: 0.25 + 0.15 * Math.random(),
+        scale: (0.25 + 0.15 * Math.random()) * 0.6,
         speed: 50 + Math.round(50 * Math.random())
       });
     }
@@ -40,63 +39,49 @@ function Background({ count = 4, height = 10, radius = 4 }) {
       rotation-x={-Math.PI * 0.5}
     >
       {shots.map( (props, i) => (
-        <ShotTemplate 
-          key={i} 
-          {...props} 
-          height={ height }
-          radius={ radius }
-        />
+        <ShotTemplate key={i} {...props} >
+          { children }
+        </ShotTemplate>
       ))}
     </group>
   );
 }
 
-function ShotTemplate({
-  positionStep,
-  position = [0, 0, 0], 
-  rotation, 
-  scale,
-  ...props
-}) {
-
-  const x = useMotionValue( position[0] );
-  const z = useMotionValue( position[2] );
+function ShotTemplate({ children, ...props }) {
+  const ref = React.useRef();
   
-  const time = useTime();
-  const y = useTransform(time, value => {
-    const seconds = value / 1000;
-    return wrap(0, props.height * 2, position[1] - seconds * props.speed * 0.15 ); 
-  });
-  useMotionValueEvent(y, 'change', (latest) => {
-    const strength = 1 - latest / (props.height * 2);
-    const scaleFactor = 3.7 + (1 - strength) * 1.7 ;
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime() * 0.2;
+    const { current } = ref;
+    
+    const positionY = wrap(0, props.height * 2, props.position[1] - time * props.speed * 0.2 );
 
-    x.set( position[0] * scaleFactor );
-    z.set( position[2] * scaleFactor );
+    const strength = 1 - positionY / (props.height * 2);
+    const scaleFactor = 3.7 + (1 - strength) * 1.7 ;
+    const theta = (time - positionY) * 0.1;
+
+    current.rotation.x = props.rotation[0] + theta * props.direction;
+    current.rotation.y = props.rotation[1] + theta * props.direction;
+
+    current.position.set( 
+      props.position[0] * scaleFactor,
+      positionY,
+      props.position[2] * scaleFactor
+    );
   });
 
   return (
-    <motion3d.group
-      position={[ x, y, z ]} 
-      scale={scale} 
-      dispose={null} 
-      initial={{
-        rotateX: rotation[0],
-        rotateY: rotation[1]
-      }}
-      animate={{
-        rotateX: rotation[0] + Math.PI * 2 * props.direction,
-        rotateY: rotation[1] + Math.PI * 2 * props.direction,
-      }}
-      transition={{
-        rotateX: { duration: props.speed / 15, ease: "linear", repeat: Infinity },
-        rotateY: { duration: props.speed / 10, ease: "linear", repeat: Infinity }
-      }}
+    <group
+      ref={ ref }
+      position={ props.position } 
+      rotation={ props.rotation } 
+      scale={ props.scale } 
+      dispose={null}
     >
-      <PhotoShot  toneMapped={ false } />
-    </motion3d.group>
+      { children }
+    </group>
   )
 } 
 
 
-export default Background;
+export default React.memo( Background );

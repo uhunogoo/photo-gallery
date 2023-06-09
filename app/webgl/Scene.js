@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { MeshPortalMaterial, OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { Box, MeshPortalMaterial, OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { useControls } from 'leva'
 import PhotoShot from './PhotoShot';
 import Background from './Background';
@@ -47,24 +47,33 @@ export default function Scene() {
     >
       <color attach="background" args={[ bgAndFog ]} />
       <PerspectiveCamera makeDefault { ...cameraSettings } />
-      <Suspense fallback={null}>
-        <mesh position={[0, 5, -5]}>
-          <planeGeometry args={[ 30, 30]}/>
-          <MeshPortalMaterial transparent blur={portal1}>
-            <PerspectiveCamera makeDefault { ...backgroundCameraSettings } />
-            <fog attach={'fog'} color={ bgAndFog } near={-10} far={50} />
-            <pointLight args={[ pointLight, 10, 0, 1 ]} position={[0, 0, -0.2]}  />
-            <BackgroundEnvironment />
-            
-            <Background count={10} radius={3.4} height={20} />
-          </MeshPortalMaterial>
-        </mesh>
+      
+      <mesh position={[0, 5, -5]}>
+        <planeGeometry args={[ 30, 30]}/>
+        <MeshPortalMaterial transparent blur={portal1}>
+          <PerspectiveCamera makeDefault { ...backgroundCameraSettings } />
+          <fog attach={'fog'} color={ bgAndFog } near={-10} far={50} />
+          <pointLight args={[ pointLight, 10, 0, 1 ]} position={[0, 0, -0.2]}  />
+          <BackgroundEnvironment />
+          
+          <Background count={15} radius={3.4} height={20}>
+            <Suspense fallback={
+              <Box scale={[ 4, 4.1, 0.07 ]} /> 
+            }>
+              <PhotoShot/>
+            </Suspense>
+          </Background>
+        </MeshPortalMaterial>
+      </mesh>
 
-        <PhotoShot type='gallery' scale={0.25} position-z={-1}/>
-        <GalleryEnvironment />
+      {/* <Gallery/> */}
+      <GalleryEnvironment />
 
-        <OrbitControls makeDefault />
-      </Suspense>
+      <OrbitControls makeDefault />
     </Canvas>
   )
+}
+
+function Gallery() {
+  return <PhotoShot type='gallery' scale={0.25} position-z={-1}/>
 }
