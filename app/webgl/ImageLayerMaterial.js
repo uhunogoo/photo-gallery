@@ -16,7 +16,7 @@ function ImageLayerMaterial() {
   const {normalScale, ...photoSettings} = useControls('Image layer',{
     normalScale: {value: 0.1, max: 1, min: -1, step: 0.001 },
     metalness: {value: 1, max: 1, min: 0, step: 0.001 },
-    roughness: {value: 0.3, max: 1, min: 0, step: 0.001 },
+    roughness: {value: 0.17, max: 1, min: 0, step: 0.001 },
     envMapIntensity: { value: 1, min: 0, max: 12, step: 0.001 }
   });
 
@@ -30,6 +30,7 @@ function ImageLayerMaterial() {
       roughnessMap={roughnessMap} 
       blending={ AdditiveBlending }
       premultipliedAlpha
+      toneMapping={false}
       { ...photoSettings }
     />
   );

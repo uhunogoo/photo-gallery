@@ -1,10 +1,10 @@
-import { useGLTF, useTexture } from '@react-three/drei';
+import { Image, useGLTF, useTexture } from '@react-three/drei';
 import React from 'react';
 import DefaultMaterial from './DefaultMaterial';
 import { RepeatWrapping } from 'three';
 import ImageLayerMaterial from './ImageLayerMaterial';
 
-export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped, ...props}) {
+export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped, map, ...props}) {
   const { nodes } = useGLTF('/shot.glb');
 
   const [ normalMap, roughnessMap ] = useTexture([
@@ -26,30 +26,29 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
     toneMapped
   }
 
-  const bodyParameters = type === 'gallery' ? { 
+  const bodyParameters = { 
     color: 0xfffffff,
     roughness: 0.3,
     metalness: 0.4,
     normalScale: [-0.5, 0.5],
     envMapIntensity: 1,
     normalMap: normalMap
-  } : {};
+  };
 
   return (
     <group {...props} dispose={null}>
       { type === 'gallery' && (
-        <mesh
-          name="image"
-          rotation-y={-Math.PI * 0.5}
-          geometry={nodes.image.geometry}
-          position={[0, 0.65, 0.075]}
-        >
-          <meshStandardMaterial  color="white" />
-        </mesh>
+        <Image 
+          url={ map }
+          scale={[7, 5.8]} 
+          toneMapped={true}
+          position={[0, 0.65, 0.075] }
+        />
       ) }
       <mesh
         name="film"
         rotation-y={-Math.PI * 0.5}
+        scale={0.995}
         geometry={nodes.film.geometry}
         position={[0, 0.65, 0.09]}
       >
@@ -61,7 +60,11 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
         rotation-y={Math.PI * 0.5}
         geometry={nodes.imageBody.geometry}
       >
-        <DefaultMaterial { ...bodyParameters } />
+        { type === 'bg' 
+          ? <meshBasicMaterial />
+          : <DefaultMaterial toneMapped={true} { ...bodyParameters } />
+        }
+        
       </mesh>
     </group>
   );

@@ -2,7 +2,7 @@ import { Environment, Lightformer } from '@react-three/drei';
 
 function BackgroundEnvironment() {
   return (
-    <Environment far={40} resolution={512} >
+    <Environment far={40}  resolution={512} >
       <color attach={'background'} args={['white']} />
       <Lightformer
         form={'ring'}

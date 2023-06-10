@@ -1,21 +1,8 @@
-import { useControls } from 'leva';
 import { Environment, Lightformer } from '@react-three/drei';
 
 function GalleryEnvironment() {
-  const environment = useControls('Gallery environment', {
-    color: "#ffffff",
-    intensity: { value: 2, min: 0, max: 6, step: 0.001 },
-
-  });
-
   return (
     <>
-      <directionalLight 
-        color={ 'white' }
-        position={[ 1, 3, 10 ]}
-        intensity={2}
-        { ...environment }
-      />
       <Environment far={40} >
         <Lightformer
           form={'rect'}
