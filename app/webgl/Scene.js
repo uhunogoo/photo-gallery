@@ -80,7 +80,8 @@ export default function Scene() {
       <EffectComposer>
         <Bloom 
           mipmapBlur 
-          luminanceThreshold={0}
+          intensity={ 0.25 }
+          luminanceThreshold={ 0.9 }
         />
       </EffectComposer>
       <OrbitControls makeDefault />
@@ -100,7 +101,7 @@ function PointLightAnimate() {
     <directionalLight 
       color={ 'white' }
       position={[ 1, 3, 3 ]}
-      intensity={2}
+      intensity={1}
       { ...environment }
     />
   </>)

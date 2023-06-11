@@ -27,12 +27,13 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
   }
 
   const bodyParameters = { 
-    color: 0xfffffff,
-    roughness: 0.3,
-    metalness: 0.4,
+    color: 0xe5e5e5,
+    roughness: 0.6,
+    metalness: 0.8,
     normalScale: [-0.5, 0.5],
     envMapIntensity: 1,
-    normalMap: normalMap
+    normalMap: normalMap,
+    toneMapped: true
   };
 
   return (
@@ -40,8 +41,7 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
       { type === 'gallery' && (
         <Image 
           url={ map }
-          scale={[7, 5.8]} 
-          toneMapped={true}
+          scale={[7, 5.8]}
           position={[0, 0.65, 0.075] }
         />
       ) }
@@ -62,9 +62,8 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
       >
         { type === 'bg' 
           ? <meshBasicMaterial />
-          : <DefaultMaterial toneMapped={true} { ...bodyParameters } />
+          : <DefaultMaterial { ...bodyParameters } />
         }
-        
       </mesh>
     </group>
   );

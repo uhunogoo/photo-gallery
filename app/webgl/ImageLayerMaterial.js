@@ -30,7 +30,7 @@ function ImageLayerMaterial() {
       roughnessMap={roughnessMap} 
       blending={ AdditiveBlending }
       premultipliedAlpha
-      toneMapping={false}
+      toneMapped={false}
       { ...photoSettings }
     />
   );
