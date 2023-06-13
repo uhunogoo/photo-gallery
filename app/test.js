@@ -10,7 +10,7 @@ const variants = {
 
 export default function Block({children}) {
   const route = usePathname();
-  children.key = route;
+  // children.key = route;
 
   return(
     <AnimatePresence mode="wait">

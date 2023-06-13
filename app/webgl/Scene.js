@@ -15,8 +15,7 @@ import Gallery from './Gallery';
 import GalleryEnvironment from './GalleryEnvironment';
 
 // import { useMouseMove } from '../_hooks/useMouseMove';
-import { Bloom, EffectComposer, Noise } from '@react-three/postprocessing';
-
+// import { Bloom, EffectComposer } from '@react-three/postprocessing';
 
 export default function Scene() {
   const [dpr, setDpr] = React.useState(1);
@@ -77,13 +76,13 @@ export default function Scene() {
           </Background>
         </MeshPortalMaterial>
       </mesh> */}
-      <EffectComposer>
+      {/* <EffectComposer>
         <Bloom 
           mipmapBlur 
           intensity={ 0.25 }
           luminanceThreshold={ 0.9 }
         />
-      </EffectComposer>
+      </EffectComposer> */}
       <OrbitControls makeDefault />
     </Canvas>
   )

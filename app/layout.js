@@ -2,6 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import Navigation from './nav'
 import { Suspense } from 'react'
+import Block from './test'
 import Scene from './webgl/Scene'
 
 const inter = Inter({ subsets: ['latin'] })

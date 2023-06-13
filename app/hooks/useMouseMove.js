@@ -1,5 +1,5 @@
 import React from 'react';
-import { throttle } from '@/app/_lib/utils';
+import { throttle } from '@/app/lib/utils';
 
 export function useMouseMove() {
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
