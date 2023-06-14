@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^9.74.11",
-    "@react-three/fiber": "^8.13.2",
+    "@react-three/drei": "^9.74.15",
+    "@react-three/fiber": "^8.13.3",
     "@react-three/postprocessing": "^2.14.9",
     "@types/three": "^0.152.1",
     "autoprefixer": "10.4.14",
@@ -19,7 +19,7 @@
     "framer-motion": "^10.12.16",
     "framer-motion-3d": "^10.12.16",
     "leva": "^0.9.35",
-    "next": "13.4.5",
+    "next": "^13.4.5",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
