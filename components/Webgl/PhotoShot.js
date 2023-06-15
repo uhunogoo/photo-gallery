@@ -43,6 +43,7 @@ export function PhotoShot({ type = 'bg', emissive, emissiveIntensity, toneMapped
           url={ map }
           scale={[7, 5.8]}
           position={[0, 0.65, 0.075] }
+          toneMapped={false}
         />
       ) }
       <mesh

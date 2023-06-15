@@ -1,7 +1,9 @@
-import { useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import PhotoShot from './PhotoShot';
-import { motion } from 'framer-motion-3d';
-// import { Text } from '@react-three/drei';
+import React from 'react';
+import { gsap } from 'gsap';
+
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const IMAGES = [
   {
@@ -27,19 +29,94 @@ const IMAGES = [
 ];
 
 function Gallery({ children }) {
-  const { scrollYProgress } = useScroll();
-  const positionY = useTransform( scrollYProgress, [0, 1], [0, 4 * (IMAGES.length - 1)] );
-  // const scrollSmooth = useSpring( scrollYProgress, { stiffness: 350, damping: 50 } );
-  // const positionY = useTransform( scrollSmooth, [0, 1], [0, 4 * (IMAGES.length - 1)] );
+  const gallery = React.useRef();
+  React.useLayoutEffect(() => {
+    const ctx = gsap.context((self) => {
+      gsap.to(gallery.current.position,
+        {
+          y: 3 * (IMAGES.length - 1),
+          ease: 'none',
+          scrollTrigger: {
+            scrub: 0.5,
+            markers: true,
+            snap: {
+              snapTo: 1 / (IMAGES.length - 1),
+              duration: { min: 0.1, max: 0.6 },
+              directional: false,
+              ease: 'power1'
+            } 
+          }
+        }
+      );
 
+      const tl = gsap.timeline({ 
+        scrollTrigger: {
+          scrub: 0.5,
+          snap: {
+            snapTo: 1 / (IMAGES.length - 1),
+            duration: { min: 0.1, max: 0.6 },
+            directional: false,
+            ease: 'power1'
+          } 
+        },
+        defaults: {
+          ease: 'none',
+          duration: 1,
+        }
+      });
+
+      gallery.current.children?.map((item, i, array) => {
+        const isLastItem = (i + 1) === array.length;
+        if (i !== 0) {
+          tl.from(item.scale, { 
+            x: 0.75,
+            y: 0.75,
+            ease: 'power2.inOut' 
+          });
+          tl.from(item.position, { 
+            z: '+=2',
+            ease: 'power1.out'
+          }, '<');
+          tl.from(item.rotation, { 
+            // y: -Math.PI * 0.5, 
+            x: -Math.PI * 0.35,
+            ease: 'sine.in'
+          }, '<');
+        }
+
+        // Reverse animation
+        if (!isLastItem) {
+          tl.to(item.scale, { 
+            x: 0.85,
+            y: 0.85,
+            ease: 'power2.out' 
+          });
+          tl.to(item.position, { 
+            y: '+=1.5',
+            z: '-=2',
+            ease: 'sine.out'
+          }, '<');
+          tl.to(item.rotation, { 
+            y: Math.PI * 0.25 , 
+            x: Math.PI * 0.5,
+            ease: 'sine.out'
+          }, '<');
+        };
+      });
+
+
+    }, gallery);
+
+    return () => ctx.revert();
+  }, []);
   return (
     <>
-      <motion.group 
-        dispose={null}
-        position-y={ positionY }
+      <group
+        ref={ gallery }
+        dispose={ null }
       >
         {IMAGES.map((image, i) => (
-          <MotionGroup key={image.id} stepY={-i * 4}>
+          <MotionGroup key={image.id} stepY={-i * 3}>
             <PhotoShot
               map={image.url}
               type="gallery"
@@ -48,49 +125,61 @@ function Gallery({ children }) {
             />
           </MotionGroup>
         ))}
-      </motion.group>
+      </group>
 
       {children}
     </>
   );
 }
 
-function MotionGroup({ children, stepY }) {
+const Group = React.forwardRef(({children, delay }, ref) => {
+  const el = React.useRef();
   const angle = Math.PI * 0.08;
-  const positionX = useMotionValue(0);
-  const positionY = useMotionValue(0);
 
-  const xSmooth = useSpring(positionX, { mass: 0.5, damping: 40, stiffness: 400 });
-  const ySmooth = useSpring(positionY, { mass: 0.5, damping: 40, stiffness: 400 });
+  React.useImperativeHandle(ref, () => {
+    // return our API
+    return {
+      moveTo(x, y) {
+        gsap.to(el.current.position, { x: 0.1 * x, y: 0.1 * y, delay });
+        gsap.to(el.current.rotation, { x: y * angle, y: x * angle, delay });
+      }
+    };
+  }, [delay]);
+  
+  return (
+    <group ref={el}>{ children }</group>
+  );
+});
 
-  const rotateY = useTransform( xSmooth, [-1, 1], [-angle, angle] );
-  const rotateX = useTransform( ySmooth, [-1, 1], [-angle, angle] );
+
+function MotionGroup({ children, stepY }) {
+  const el = React.useRef();
   
   function handlePointerMove(event) {
     const { uv } = event; 
-    positionX.set( (uv.x - 0.5) * 2 );
-    positionY.set( (uv.y - 0.5) * 2 );
+    el.current.moveTo(
+      (uv.x - 0.5) * 2, 
+      (uv.y - 0.5) * 2
+    );
   }
+  
   function handleReset() {
-    positionY.set(0);
-    positionX.set(0);
+    el.current.moveTo( 0, 0 );
   }
   
   return (
     <group position-y={stepY} dispose={null}>
       <HoverCatcher
-        scale={[ 2, 2.1 ]}
+        scale={[ 2.15, 2.3 ]}
         handlePointerMove={ handlePointerMove }
         handleReset={ handleReset }
       />
-
-      <motion.group
-        rotation-y={ rotateY }
-        rotation-x={ rotateX }
+      <Group
+        ref={el}
         dispose={null}
       >
         { children }
-      </motion.group>
+      </Group>
     </group>
   );
 } 
