@@ -51,7 +51,7 @@ function Gallery({ children }) {
 
       const tl = gsap.timeline({ 
         scrollTrigger: {
-          scrub: 0.5,
+          scrub: 0.8,
           snap: {
             snapTo: 1 / (IMAGES.length - 1),
             duration: { min: 0.1, max: 0.6 },
@@ -68,38 +68,32 @@ function Gallery({ children }) {
       gallery.current.children?.map((item, i, array) => {
         const isLastItem = (i + 1) === array.length;
         if (i !== 0) {
-          tl.from(item.scale, { 
-            x: 0.75,
-            y: 0.75,
-            ease: 'power2.inOut' 
-          });
           tl.from(item.position, { 
             z: '+=2',
-            ease: 'power1.out'
-          }, '<');
+            ease: 'power3.out'
+          });
           tl.from(item.rotation, { 
-            // y: -Math.PI * 0.5, 
-            x: -Math.PI * 0.35,
+            x: -Math.PI * 0.4,
             ease: 'sine.in'
-          }, '<');
+          }, '<+=10%');
         }
 
         // Reverse animation
         if (!isLastItem) {
           tl.to(item.scale, { 
-            x: 0.85,
-            y: 0.85,
+            x: 0.9,
+            y: 0.9,
             ease: 'power2.out' 
           });
           tl.to(item.position, { 
-            y: '+=1.5',
+            y: '+=1.4',
             z: '-=2',
-            ease: 'sine.out'
+            ease: 'circ.in'
           }, '<');
-          tl.to(item.rotation, { 
-            y: Math.PI * 0.25 , 
+          tl.to(item.rotation, {
             x: Math.PI * 0.5,
-            ease: 'sine.out'
+            z: Math.PI * 0.5,
+            ease: 'circ.in'
           }, '<');
         };
       });
@@ -137,11 +131,21 @@ const Group = React.forwardRef(({children, delay }, ref) => {
   const angle = Math.PI * 0.08;
 
   React.useImperativeHandle(ref, () => {
+    const transition = {
+      duration: 0.3,
+      ease: 'expo.out'
+    };
+    const moveX = gsap.quickTo(el.current.position, 'x', transition);
+    const moveY = gsap.quickTo(el.current.position, 'y', transition);
+    const rotateY = gsap.quickTo(el.current.rotation, 'y', transition);
+    const rotateX = gsap.quickTo(el.current.rotation, 'x', transition);
     // return our API
     return {
       moveTo(x, y) {
-        gsap.to(el.current.position, { x: 0.1 * x, y: 0.1 * y, delay });
-        gsap.to(el.current.rotation, { x: y * angle, y: x * angle, delay });
+        moveX( 0.1 * x );
+        moveY( 0.1 * y );
+        rotateY( x * angle );
+        rotateX( y * angle );
       }
     };
   }, [delay]);

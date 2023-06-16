@@ -58,7 +58,7 @@ export default function Scene() {
       <GalleryEnvironment />
       <PointLightAnimate />
 
-      {/* <mesh position={[0, 5, -5]}>
+      <mesh position={[0, 5, -5]}>
         <planeGeometry args={[ 30, 30]}/>
         <MeshPortalMaterial toneMapped transparent blur={portal1}>
           <PerspectiveCamera makeDefault { ...backgroundCameraSettings } />
@@ -74,7 +74,7 @@ export default function Scene() {
             </Suspense>
           </Background>
         </MeshPortalMaterial>
-      </mesh> */}
+      </mesh>
       {/* <EffectComposer>
         <Bloom 
           mipmapBlur 
